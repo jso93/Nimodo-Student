@@ -1,4 +1,5 @@
 local M = {}
+local config = require 'src.pattern.config.config'
 local lfs = require( "lfs" )
 --variables
 M.hora,M.minuto,M.segundo,M.tiempoPregunta = 0,0,0,0
@@ -381,16 +382,19 @@ function M.nextPreguntaMostrar()
 	if M.estilo == 'Visual' then 
 		M.recursoName = M.pregunta.idpregunta..".png"--nombre del archivo a descargar
 		M.recursoNameAux = tostring(os.time())..'.png'--nombre del archivo descargado
-		M.url = "http://107.180.51.38/"--remote
-		M.url = "http://192.168.137.1/"--local
+		M.url = config.ip
 		M.url = M.url.."Nimodo/NimodoStudent/pdo/images/"
 	end
 	if M.estilo == 'Auditiva' then 
 		M.recursoName = M.pregunta.idpregunta..".ogg"--nombre del archivo a descargar
 		M.recursoNameAux = tostring(os.time())..'.ogg'--nombre del archivo descargado
-		M.url = "http://107.180.51.38/"--remote
-		M.url = "http://192.168.137.1/"--local
+		M.url = config.ip
 		M.url = M.url.."Nimodo/NimodoStudent/pdo/audio/" 
+		--IMAGEN
+		M.recursoNameImage = M.pregunta.idpregunta..".png"--nombre del archivo a descargar
+		M.recursoNameImageAux = tostring(os.time())..'.png'--nombre del archivo descargado
+		M.urlImage = config.ip
+		M.urlImage = M.urlImage.."Nimodo/NimodoStudent/pdo/images/"
 	end
 
 	local function downloadRecurso( obj )
@@ -400,7 +404,15 @@ function M.nextPreguntaMostrar()
 		for file in lfs.dir( doc_path ) do
 		    os.remove(system.pathForFile( file, system.TemporaryDirectory))--eliminamos archivos del directorio temporal
 		end
-		M.network = network.download(M.url..M.recursoName,"GET",M.downloadRecursoPreguntaReceive,M.recursoNameAux,system.TemporaryDirectory )
+		if M.estilo == 'Auditiva' then
+			print( 'DESCARGAR IMAGEN DE PREGUNTA AUDITIVA' )
+			M.networkImage = network.download(M.urlImage..M.recursoNameImage,"GET",M.downloadRecursoImageReceive,M.recursoNameImageAux,system.TemporaryDirectory )
+		end
+		if M.estilo == 'Visual' then 
+			M.filenameImage = nil
+	    	--baseDirectory = nil,
+			M.network = network.download(M.url..M.recursoName,"GET",M.downloadRecursoPreguntaReceive,M.recursoNameAux,system.TemporaryDirectory )
+		end
 	end
 	if M.respuesta == 'correcta' then 
 		M.audioRespuesta = audio.loadSound('src/audio/correcto.mp3')
@@ -436,6 +448,7 @@ function M.downloadRecursoPreguntaReceive( event )
 	    pregunta = M.pregunta,
 	    filename = event.response.filename,
 	    baseDirectory = event.response.baseDirectory,
+	    filenameImage = M.filenameImage,
 	    alternativa = M.alternativa,
 	    listaAlternativa = M.listaAlternativa,
 	    tiempo = M.scene.tiempo,
@@ -465,6 +478,21 @@ function M.downloadRecursoPreguntaReceive( event )
 		--ELIMINAMOS DE MEMORIA MODULOS EXTERNOS
 		package.loaded['src.pattern.controller.PreguntaSceneController'] = nil--THIS CONTROLLER
 		M.scene.composer.gotoScene( 'src.pattern.view.LoadScene', { effect="fromRight", time=1000, params=_params } )
+	end
+end
+--------------------DESCARGA DE IMAGEN DE UNA PREGUNTA AUDITIVA-------------------------
+function M.downloadRecursoImageReceive( event )
+	if ( event.isError ) then
+		native.showAlert('Nimodo', 'Verifique su conexion a internet'..event.response, {'ok'}, function(event)end)
+	else	
+		if event.response.filename~=nil then 
+			print('imagen name:'..event.response.filename)
+			M.filenameImage = event.response.filename--nombre de la imagen de la pregunta auditiva  
+		else
+			M.filenameImage = nil
+			print( 'la pregunta auditiva no tiene imagen...' )
+		end
+		M.network = network.download(M.url..M.recursoName,"GET",M.downloadRecursoPreguntaReceive,M.recursoNameAux,system.TemporaryDirectory )
 	end
 end
 --FUNCION PARA REDONEDAR NUMEROS A LA CANTIDAD DE DECIMALES QUE SE DESEE
@@ -500,6 +528,11 @@ function M.finishEvaluacionAdaptativa()
 	if M.network~=nil then 
 		network.cancel( M.network )--cancelamos cualquier descarga(audio o imagen)
 		M.network = nil
+		print( 'cancelamos request...' )
+	end
+	if M.networkImage~=nil then 
+		network.cancel( M.networkImage )--cancelamos cualquier descarga(audio o imagen)
+		M.networkImage = nil
 		print( 'cancelamos request...' )
 	end
 	local _params = {

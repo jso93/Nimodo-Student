@@ -38,42 +38,47 @@ function scene:crearMenu( )
 	    y = 50,
 	    width = display.contentWidth*.9,
 	    font = "src/fonts/Alessia.otf",
-	    fontSize = 17,
+	    fontSize = 12,
 	    align = "left"  -- Alignment parameter
 	}
 	scene.txtPregunta = display.newText( options2 )
 	scene.txtPregunta.anchorY = 0
 	scene.txtPregunta:setTextColor( 0,0,0 )
+    print('hello')
+    print(scene.filename)
+    if scene.filename~=nil then 
+        scene.preguntaImagen = display.newImage(scene.filename, scene.baseDirectory,display.contentCenterX,display.contentCenterY+20 )
+        scene.preguntaImagen.width = 300
+        scene.preguntaImagen.height = 120
+    else
+        print('pregunta sin imagen')
+    end
 
-	scene.preguntaImagen = display.newImage(scene.filename, scene.baseDirectory,display.contentCenterX,display.contentCenterY+20 )
-    scene.preguntaImagen.width = 300
-    scene.preguntaImagen.height = 120
-
-    scene.alternativa1 = display.newImage('src/images/alternativa.png',display.contentCenterX-100 ,display.contentHeight-25 )
-    scene.alternativa1.width = 90
+    scene.alternativa1 = display.newImage('src/images/alternativa.png',display.contentCenterX-150 ,display.contentHeight-25 )
+    scene.alternativa1.width = 120
     scene.alternativa1.height = 70
     scene.alternativa1.id = 1
-    scene.alternativa1.label = display.newText(scene.alternativa[1].descripcion, scene.alternativa1.x,scene.alternativa1.y-10,"src/fonts/Alessia.otf", 20 )
+    scene.alternativa1.label = display.newText(scene.alternativa[1].descripcion, scene.alternativa1.x,scene.alternativa1.y-10,"src/fonts/Alessia.otf", 12 )
 	scene.alternativa1.label:setTextColor( 0,0,0 )
 
     scene.alternativa2 = display.newImage('src/images/alternativa.png',display.contentCenterX ,display.contentHeight-25 )
-    scene.alternativa2.width = 90
+    scene.alternativa2.width = 120
     scene.alternativa2.height = 70
     scene.alternativa2.id = 2
-    scene.alternativa2.label = display.newText(scene.alternativa[2].descripcion, scene.alternativa2.x,scene.alternativa2.y-10,"src/fonts/Alessia.otf", 20 )
+    scene.alternativa2.label = display.newText(scene.alternativa[2].descripcion, scene.alternativa2.x,scene.alternativa2.y-10,"src/fonts/Alessia.otf", 12 )
 	scene.alternativa2.label:setTextColor( 0,0,0 )
 
-    scene.alternativa3 = display.newImage('src/images/alternativa.png',display.contentCenterX+100 ,display.contentHeight-25 )
-    scene.alternativa3.width = 90
+    scene.alternativa3 = display.newImage('src/images/alternativa.png',display.contentCenterX+150 ,display.contentHeight-25 )
+    scene.alternativa3.width = 120
     scene.alternativa3.height = 70
     scene.alternativa3.id = 3
-    scene.alternativa3.label = display.newText(scene.alternativa[3].descripcion, scene.alternativa3.x,scene.alternativa3.y-10,"src/fonts/Alessia.otf", 20 )
+    scene.alternativa3.label = display.newText(scene.alternativa[3].descripcion, scene.alternativa3.x,scene.alternativa3.y-10,"src/fonts/Alessia.otf", 12 )
 	scene.alternativa3.label:setTextColor( 0,0,0 )
 
     scene.group:insert(scene.txtTiempo)
     scene.group:insert(scene.txtTiempo.label)
     scene.group:insert(scene.txtPregunta)
-    scene.group:insert(scene.preguntaImagen)
+    if scene.filename~=nil then scene.group:insert(scene.preguntaImagen) else print('pregunta sin imagen') end
     scene.group:insert(scene.calificar)
     scene.group:insert(scene.calificar.label)
     scene.group:insert(scene.correcto)
@@ -104,7 +109,6 @@ function scene:create( event )
     scene.listaPreguntaResult = event.params.listaPreguntaResult
     scene.listaPregunta = event.params.listaPregunta
     scene.listaPreguntaIndicador =  event.params.listaPreguntaIndicador--LISTA DE TODAS LAS PREGUNTAS DEL INDICADOR ESPECIFICADO
-   -- scene.listaPreguntasAlanzar = event.params.listaPreguntasAlanzar--LISTA DE TODAS LAS PREGUNTAS DEL INDICADOR ESPECIFICADO
 	scene.pregunta = event.params.pregunta
 	scene.filename = event.params.filename
 	scene.baseDirectory = event.params.baseDirectory

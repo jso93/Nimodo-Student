@@ -1,4 +1,5 @@
 local M = {}
+local config = require 'src.pattern.config.config'
 M.socket = require 'socket'
 M.udp = M.socket.udp()
 M.evaluacionAdaptativaDao = require 'src.pattern.dao.EvaluacionAdaptativaDao'
@@ -32,7 +33,7 @@ end
 function M.sendMessageNotification()
 	M.udp = M.socket.udp()
 	M.udp:settimeout(0)
-	M.udp:setpeername("192.168.137.1", 6789)
+	M.udp:setpeername(config.host, 6789)
 	M.udp:send(M.scene.estudiante.nombres)
 end
 --ANIMACION BUTTON

@@ -13,10 +13,13 @@ function scene:crearMenu( )
     scene.logo.height = 80
 
 	scene.txtUser = native.newTextField( display.contentCenterX, display.contentCenterY-20, 150, 20 )
- 	scene.txtUser.placeholder = 'User'
+    scene.txtUser.placeholder = 'User'
+ 	scene.txtUser.text = ''
+
 
     scene.txtPassword = native.newTextField( display.contentCenterX, display.contentCenterY+20, 150, 20 )
-	scene.txtPassword.placeholder = 'Password'
+    scene.txtPassword.placeholder = 'Password'
+	scene.txtPassword.text = ''
  	scene.txtPassword.isSecure = true
 
  	scene.imageUser = display.newImage('src/images/user.png',scene.txtUser.x - scene.txtUser.width/2-20,scene.txtUser.y)

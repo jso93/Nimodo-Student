@@ -1,9 +1,10 @@
 local M = {}
+local config = require 'src.pattern.config.config'
 --VARIABLES
 M.headers,M.params = {},{}
 M.listaAlternativa = {}
 M.url = "http://i-soft.net/"--remote
-M.url = "http://192.168.137.1/"--local
+M.url = config.ip--local 192.168.137.1  192.168.1.28 
 M.listaPregunta = nil
 M.json=require 'json'
 --FUNCIONES

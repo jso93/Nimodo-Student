@@ -18,6 +18,7 @@ function scene:crearMenu( )
 	    pregunta = scene.pregunta,
 	    filename = scene.filename,
 	    baseDirectory = scene.baseDirectory,
+    	filenameImage = scene.filenameImage,
 	    alternativa = scene.alternativa,
 	    listaAlternativa = scene.listaAlternativa,
 	    tiempo = scene.tiempo,
@@ -50,6 +51,7 @@ function scene:create( event )
 	scene.pregunta = event.params.pregunta
 	scene.filename = event.params.filename
 	scene.baseDirectory = event.params.baseDirectory
+    scene.filenameImage = event.params.filenameImage
     scene.alternativa = event.params.alternativa
 	scene.listaAlternativa = event.params.listaAlternativa
     scene.tiempo = event.params.tiempo

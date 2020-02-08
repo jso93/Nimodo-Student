@@ -1,4 +1,5 @@
 local M = {}
+local config = require 'src.pattern.config.config'
 M.evaluacionAdaptativaConfigDao = require 'src.pattern.dao.EvaluacionAdaptativaConfigDao'
 M.alternativaDao = require 'src.pattern.dao.AlternativaDao'
 M.estiloDao = require 'src.pattern.dao.EstiloDao'
@@ -173,11 +174,11 @@ function M.previousTAI()
 				M.estilo = M.listaEstilo[i]
 				if M.estilo.estilo == 'Visual' then 
 					M.recursoName = M.listaPreguntaIndicador[M.indexInicial][M.aux].idpregunta..".png"
-					M.url = "http://192.168.137.1/Nimodo/NimodoStudent/pdo/images/"
+					M.url = config.ip.."Nimodo/NimodoStudent/pdo/images/"
 				end
 				if M.estilo.estilo == 'Auditiva' then 
 					M.recursoName = M.listaPreguntaIndicador[M.indexInicial][M.aux].idpregunta..".ogg"
-					M.url = "http://192.168.137.1/Nimodo/NimodoStudent/pdo/audio/"
+					M.url = config.ip.."Nimodo/NimodoStudent/pdo/audio/"					
 				end
 				network.download(M.url..M.recursoName,"GET",M.downloadRecursoPregunta,M.recursoName,system.TemporaryDirectory )
 			end
